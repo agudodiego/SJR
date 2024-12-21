@@ -1,0 +1,11 @@
+CREAR CONTENEDOR CON MYSQL:
+
+	docker pull mysql/mysql-server:8.0
+
+	docker run -d --name <nombre-contenedor>
+	-e MYSQL_DATABASE=<nombre-DB> -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_ROOT_PASSWORD=my-secret-pw
+	-p 3306:3306
+	mysql/mysql-server:8.0
+
+	Agregar para generar un volumen conectado al contenedor:
+	-v C:/Users/dagudo/Desktop/<carpeta>:/var/lib/mysql
