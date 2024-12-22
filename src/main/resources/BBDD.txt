@@ -9,3 +9,6 @@ CREAR CONTENEDOR CON MYSQL:
 
 	Agregar para generar un volumen conectado al contenedor:
 	-v C:/Users/dagudo/Desktop/<carpeta>:/var/lib/mysql
+
+	Si la conexion con DBeaver falla editar la conexion poniendo:
+	edit connection/driver proerties/AllowPublicKeyRetrival = true

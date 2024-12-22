@@ -23,7 +23,7 @@ public class CustomUsersDetailsService implements UserDetailsService {
     // Método para convertir un rol (String) en una lista de GrantedAuthority
     public Collection<GrantedAuthority> mapToAuthorities(String role) {
         // Convierte el rol en una autoridad con el prefijo "ROLE_"
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     // Método para cargar un usuario con todos sus datos por medio de su username

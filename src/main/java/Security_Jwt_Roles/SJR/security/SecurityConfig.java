@@ -1,12 +1,15 @@
 package Security_Jwt_Roles.SJR.security;
 
+import Security_Jwt_Roles.SJR.models.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,25 +46,21 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Deshabilita CSRF
-                .exceptionHandling(exceptions ->
-                        exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint) // Nos establece un punto de entrada personalizado de autenticación para el manejo de autenticaciones no autorizadas
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Gestión de sesiones sin estado
-                )
+                .csrf(AbstractHttpConfigurer::disable) // Deshabilita CSRF
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Gestión de sesiones sin estado
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint)) // Nos establece un punto de entrada personalizado de autenticación para el manejo de autenticaciones no autorizadas
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Permitir todas las rutas de autenticación
-//                        .requestMatchers(HttpMethod.POST, "/api/celular/crear").hasAuthority("ROLE_ADMIN") // Verifica la autoridad con el prefijo "ROLE_"
-//                        .requestMatchers(HttpMethod.GET, "/api/celular/listar").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-//                        .requestMatchers(HttpMethod.GET, "/api/celular/listarId/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-//                        .requestMatchers(HttpMethod.DELETE, "/api/celular/eliminar/**").hasAuthority("ROLE_ADMIN")
-//                        .requestMatchers(HttpMethod.PUT, "/api/celular/actualizar").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/crud/crear").hasAuthority(Roles.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/api/crud/listar").hasAnyAuthority(Roles.ADMIN.name(), Roles.USER.name())
+                        .requestMatchers(HttpMethod.GET, "/api/crud/listarId/**").hasAnyAuthority(Roles.ADMIN.name(), Roles.USER.name()) // los ** son por los ids que espera
+                        .requestMatchers(HttpMethod.DELETE, "/api/crud/eliminar/**").hasAuthority(Roles.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/crud/actualizar").hasAuthority(Roles.ADMIN.name())
                         .anyRequest().authenticated() // Todas las demás solicitudes deben ser autenticadas
                 )
-                .httpBasic(httpBasic -> {}); // Configuración básica de autenticación
+                .httpBasic(httpBasic -> {}) // Configuración básica de autenticación
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

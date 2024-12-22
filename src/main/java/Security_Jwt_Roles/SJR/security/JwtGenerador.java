@@ -30,7 +30,7 @@ public class JwtGenerador {
                 .setSubject(username) //Aca establecemos el nombre de usuario que está iniciando sesión
                 .setIssuedAt(new Date()) //Establecemos la fecha de emisión del token en el momento actual
                 .setExpiration(expiracionToken) //Establecemos la fecha de caducidad del token
-                .signWith(SignatureAlgorithm.HS512, JWT_SECRET) /*Utilizamos este método para firmar
+                .signWith(SignatureAlgorithm.HS256, JWT_SECRET) /*Utilizamos este método para firmar
                 nuestro token y de esta manera evitar la manipulación o modificación de este*/
                 .compact(); //Este método finaliza la construcción del token y lo convierte en una cadena compacta
         return token;

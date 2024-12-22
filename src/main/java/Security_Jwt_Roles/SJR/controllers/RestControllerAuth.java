@@ -41,6 +41,7 @@ public class RestControllerAuth {
         Usuario usuario = new Usuario();
         usuario.setUsername(dtoRegistro.getUsername());
         usuario.setPassword(passwordEncoder.encode(dtoRegistro.getPassword()));
+        usuario.setMail(dtoRegistro.getMail());
         usuario.setRol(Roles.USER);
         usuariosRepository.save(usuario);
         return new ResponseEntity<>("Registro de usuario exitoso", HttpStatus.OK);
@@ -55,6 +56,7 @@ public class RestControllerAuth {
         Usuario usuario = new Usuario();
         usuario.setUsername(dtoRegistro.getUsername());
         usuario.setPassword(passwordEncoder.encode(dtoRegistro.getPassword()));
+        usuario.setMail(dtoRegistro.getMail());
         usuario.setRol(Roles.ADMIN);
         usuariosRepository.save(usuario);
         return new ResponseEntity<>("Registro de admin exitoso", HttpStatus.OK);
